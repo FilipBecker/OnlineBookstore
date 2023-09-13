@@ -58,7 +58,7 @@ app.delete('/books/:id', (req, res) => {
 });
 
 
-mongoose.connect('mongodb://mongodb://localhost:27017/bookdatabase', {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect('mongodb://127.0.0.1:27017/mydatabase', {useNewUrlParser: true, useUnifiedTopology: true});
 
 const bookSchema = new mongoose.Schema({
     title: String,
