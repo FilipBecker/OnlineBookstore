@@ -20,24 +20,30 @@ app.get('/books', (req, res) => {
 });
 
 app.get('/books/:id', (req, res) => {
-    const book = books.find(b => b.id === parseInt(req.params.id));
-    if (!book) return res.status(404).send('Book not found.');
-
-    res.send(book);
+    const query = Book.where({ID: parseInt(req.params.id)});
+    query.findOne().then(book => {
+        if (!book) return res.status(404).send('Book not found.');
+        res.send(book);
+    });
 });
 
 app.use(express.json());
 
 app.post('/books', (req, res) => {
-    const newBook = new Book ({
-        title: req.body.title,
-        author: req.body.author,
+    Book.find().then(books => {
+        const num = books.length;
+    
+        const newBook = new Book ({
+            ID: num + 1,
+            title: req.body.title,
+            author: req.body.author,
 
+        });
+        newBook.save().then(savedBook => {
+            console.log('Book saved:', savedBook);
+        });
+        res.json(newBook);
     });
-    newBook.save().then(savedBook => {
-        console.log('Book saved:', savedBook);
-    });
-    res.json(newBook);
 });
 
 app.put('/books/:id', (req, res) => {
@@ -61,9 +67,11 @@ app.delete('/books/:id', (req, res) => {
 mongoose.connect('mongodb://127.0.0.1:27017/mydatabase', {useNewUrlParser: true, useUnifiedTopology: true});
 
 const bookSchema = new mongoose.Schema({
+    ID: Number,
     title: String,
     author: String,
     
 });
 
 const Book = mongoose.model('Book', bookSchema);
+
