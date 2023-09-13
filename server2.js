@@ -19,6 +19,13 @@ app.get('/books', (req, res) => {
     res.json(books);
 });
 
+app.get('/books/:id', (req, res) => {
+    const book = books.find(b => b.id === parseInt(req.params.id));
+    if (!book) return res.status(404).send('Book not found.');
+
+    res.json(book)
+});
+
 app.use(express.json());
 
 app.post('/books', (req, res) => {
