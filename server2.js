@@ -12,20 +12,18 @@ app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
 
-let books = [
-    { id: 1, title: "Harry Potter and the Sorcerer's Stone", author: "J.K. Rowling" }, 
-    { id: 2, title: "The Hobbit", author: "J.R.R. Tolken" }
-];
-
 app.get('/books', (req, res) => {
-    res.json(books);
+    Book.find().then(books => {
+        console.log('All books: ', books);
+        res.json(books);
+    });
 });
 
 app.get('/books/:id', (req, res) => {
     const book = books.find(b => b.id === parseInt(req.params.id));
     if (!book) return res.status(404).send('Book not found.');
 
-    res.json(book);
+    res.send(book);
 });
 
 app.use(express.json());
