@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 const PORT = 3000;
+const mongoose = require('mongoose')
+
 
 app.get('/', (req, res) => {
     res.send('Hello, Node.js!');
@@ -23,7 +25,7 @@ app.get('/books/:id', (req, res) => {
     const book = books.find(b => b.id === parseInt(req.params.id));
     if (!book) return res.status(404).send('Book not found.');
 
-    res.json(book)
+    res.json(book);
 });
 
 app.use(express.json());
@@ -55,3 +57,15 @@ app.delete('/books/:id', (req, res) => {
     res.json(deletedBook);
 });
 
+
+mongoose.connect('mongodb://mongodb://localhost:27017/bookdatabase', {useNewUrlParser: true, useUnifiedTopology: true});
+
+const bookSchema = new mongoose.Schema({
+    title: String,
+    author: String,
+    publishedDate: Date,
+    price: String,
+    description: String
+});
+
+const Book = mongoose.model('Book', bookSchema);
