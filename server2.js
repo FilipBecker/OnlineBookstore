@@ -31,13 +31,15 @@ app.get('/books/:id', (req, res) => {
 app.use(express.json());
 
 app.post('/books', (req, res) => {
-    const book = {
-        id: books.length + 1,
+    const newBook = new Book ({
         title: req.body.title,
-        autor: req.body.author
-    };
-    books.push(book);
-    res.json(book);
+        author: req.body.author,
+
+    });
+    newBook.save().then(savedBook => {
+        console.log('Book saved:', savedBook);
+    });
+    res.json(newBook);
 });
 
 app.put('/books/:id', (req, res) => {
@@ -63,9 +65,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/mydatabase', {useNewUrlParser: true,
 const bookSchema = new mongoose.Schema({
     title: String,
     author: String,
-    publishedDate: Date,
-    price: String,
-    description: String
+    
 });
 
 const Book = mongoose.model('Book', bookSchema);
