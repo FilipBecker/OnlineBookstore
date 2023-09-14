@@ -58,12 +58,10 @@ app.post('/books', (req, res) => {
 });
 
 app.put('/books/:id', (req, res) => {
-    const book = books.find(b => b.id === parseInt(req.params.id));
-    if (!book) return res.status(404).send('Book not found.');
-
-    book.title = req.body.title;
-    book.author = req.body.author;
-    res.json(book);
+    Book.findOneAndUpdate({ ID: req.params.id }, { title: req.body.title, author: req.body.author}, {new: true}).then(updatedBook => {
+        console.log('Updated book:', updatedBook);
+        res.json(updatedBook);
+    });
 });
 
 app.delete('/books/:id', (req, res) => {
