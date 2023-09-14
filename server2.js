@@ -31,18 +31,29 @@ app.use(express.json());
 
 app.post('/books', (req, res) => {
     Book.find().then(books => {
-        const num = books.length;
-    
-        const newBook = new Book ({
-            ID: num + 1,
-            title: req.body.title,
-            author: req.body.author,
+        if (books.length == 0) {
+            const newBook = new Book ({
+                ID: 1,
+                title: req.body.title,
+                author: req.body.author,
 
-        });
-        newBook.save().then(savedBook => {
-            console.log('Book saved:', savedBook);
-        });
-        res.json(newBook);
+            });
+            newBook.save().then(savedBook => {
+                console.log('Book saved:', savedBook);
+            });
+            res.json(newBook);
+        } else {
+            const newBook = new Book ({
+                ID: books[books.length - 1].ID + 1,
+                title: req.body.title,
+                author: req.body.author,
+            });
+            newBook.save().then(savedBook => {
+                console.log('Book saved:', savedBook);
+            });
+            res.json(newBook);
+        };
+        
     });
 });
 
@@ -74,4 +85,3 @@ const bookSchema = new mongoose.Schema({
 });
 
 const Book = mongoose.model('Book', bookSchema);
-
