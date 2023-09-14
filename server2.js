@@ -1,12 +1,12 @@
 const express = require('express');
 const app = express();
 const PORT = 3000;
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 
 app.get('/', (req, res) => {
-    res.send('Hello, Node.js!');
-}) ;
+    res.send('This is a working book store!');
+});
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
@@ -65,13 +65,10 @@ app.put('/books/:id', (req, res) => {
 });
 
 app.delete('/books/:id', (req, res) => {
-    const bookIndex = books.findIndex(b => b.id === parseInt(req.params.id));
-    if (bookIndex === -1) return res.status(404).send('Book not found.');
-
-    const deletedBook = books.splice(bookIndex, 1);
-    res.json(deletedBook);
+    Book.findOneAndDelete({ ID: req.params.id }).then(deletedBook => {
+        res.json(deletedBook);
+    });
 });
-
 
 mongoose.connect('mongodb://127.0.0.1:27017/mydatabase', {useNewUrlParser: true, useUnifiedTopology: true});
 
